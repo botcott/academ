@@ -70,3 +70,6 @@ td.cell-О select { color: black; }
 .social-links { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
 .soc-btn { text-decoration: none; color: white; padding: 8px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; text-align: center; }
 .tg { background: #0088cc; } .ds { background: #5865F2; } .gh { background: #333; }
+
+#attendance-screen.active ~ .dockbar #btn-duty-open { display: flex !important; }
+.dock-side .clean-btn.visible { display: flex !important; }
