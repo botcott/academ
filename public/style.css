@@ -49,3 +49,46 @@ td.cell-О select { color: black; }
 .modal-card { background: var(--card); width: 60%; padding: 25px; border-radius: 25px; text-align: center; }
 .ui-btn { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
 .secondary { background: #6c757d; }
+
+/* Блок авторов */
+.authors-info {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+.authors-info h4 { margin: 0; font-size: 0.9rem; opacity: 0.7; }
+.authors-info p { margin: 5px 0 15px; font-weight: bold; font-size: 0.95rem; }
+
+/* Кнопки соцсетей */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.soc-btn {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: block;
+    transition: opacity 0.2s;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+}
+
+.soc-btn:active { transform: translateY(2px); box-shadow: none; }
+
+.tg { background-color: #0088cc; } /* Цвет Telegram */
+.ds { background-color: #5865F2; } /* Цвет Discord */
+.gh { background-color: #333; }    /* Цвет GitHub */
+
+[data-theme="dark"] .gh { background-color: #444; border: 1px solid #666; }
+
+/* Адаптация для очень узких экранов */
+@media (max-width: 350px) {
+    .modal-card { width: 85%; }
+    .soc-btn { font-size: 0.8rem; padding: 8px; }
+}
