@@ -158,3 +158,51 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     render();
 });
+
+// --- ЛОГИКА ЭКСПОРТА И ИМПОРТА ---
+
+// 1. Экспорт
+document.getElementById('btn-export').onclick = () => {
+    const dataStr = JSON.stringify(groups, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `academ_backup_${currentMonthKey}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};
+
+// 2. Импорт
+document.getElementById('btn-import').onclick = () => {
+    document.getElementById('import-file').click();
+};
+
+document.getElementById('import-file').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const importedData = JSON.parse(event.target.result);
+            
+            // Простая валидация: проверяем, что это объект
+            if (typeof importedData === 'object' && !Array.isArray(importedData)) {
+                if (confirm("Это заменит все текущие данные. Продолжить?")) {
+                    groups = importedData;
+                    save();
+                    location.reload(); // Перезагружаем для чистого рендера
+                }
+            } else {
+                alert("Ошибка: Неверный формат файла.");
+            }
+        } catch (err) {
+            alert("Ошибка при чтении файла: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+};

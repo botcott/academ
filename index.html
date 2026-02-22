@@ -49,6 +49,14 @@
         <div class="modal-card">
             <h3>Настройки</h3>
             <button id="btn-theme-toggle" class="ui-btn full-width">Тема 🌓</button>
+
+            <!-- Секция Данных -->
+            <div style="margin: 15px 0; padding-top: 10px; border-top: 1px solid var(--border);">
+                <h4 style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 10px;">Данные (JSON)</h4>
+                <button id="btn-export" class="ui-btn full-width" style="background:#28a745; box-shadow: 0 3px 0 #1e7e34;">Экспорт в файл 📥</button>
+                <button id="btn-import" class="ui-btn full-width" style="background:#17a2b8; box-shadow: 0 3px 0 #117a8b;">Импорт из файла 📤</button>
+                <input type="file" id="import-file" style="display:none" accept=".json">
+            </div>
             
             <div class="authors-info">
                 <h4>Разработчик:</h4>
