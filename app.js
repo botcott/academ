@@ -68,7 +68,35 @@ function render() {
         const body = document.getElementById('table-body');
         body.innerHTML = '';
 
-        if (!groups[currentGroupId][currentMonthKey]) groups[currentGroupId][currentMonthKey] = [];
+        // --- ЛОГИКА ПЕРЕНОСА ИМЕН ИЗ ПРОШЛОГО МЕСЯЦА ---
+        if (!groups[currentGroupId][currentMonthKey] || groups[currentGroupId][currentMonthKey].length === 0) {
+            const monthKeys = Object.keys(groups[currentGroupId]).sort();
+            const currentIndex = monthKeys.indexOf(currentMonthKey);
+            
+            let prevMonthData = [];
+            if (currentIndex === -1) {
+                // Если текущего месяца нет, берем последний существующий
+                const lastMonthKey = monthKeys[monthKeys.length - 1];
+                if (lastMonthKey) prevMonthData = groups[currentGroupId][lastMonthKey];
+            } else if (currentIndex > 0) {
+                // Берем строго предыдущий по списку
+                const prevMonthKey = monthKeys[currentIndex - 1];
+                prevMonthData = groups[currentGroupId][prevMonthKey];
+            }
+
+            if (prevMonthData.length > 0) {
+                const [year, month] = currentMonthKey.split('-').map(Number);
+                const daysInNewMonth = new Date(year, month, 0).getDate();
+                
+                groups[currentGroupId][currentMonthKey] = prevMonthData.map(row => ({
+                    name: row.name,
+                    data: Array(daysInNewMonth).fill("")
+                }));
+                save();
+            } else {
+                groups[currentGroupId][currentMonthKey] = [];
+            }
+        }
         
         const monthData = groups[currentGroupId][currentMonthKey];
         const [year, month] = currentMonthKey.split('-').map(Number);
@@ -88,7 +116,6 @@ function render() {
                     </select></td>`;
             }
 
-            // Создаем ячейку ФИО с поддержкой placeholder
             const tdName = document.createElement('td');
             tdName.className = 'sticky-col';
             tdName.innerHTML = `<button class="btn-del-row" data-del-row="${idx}">×</button>`;
@@ -97,7 +124,7 @@ function render() {
             span.contentEditable = true;
             span.className = 'edit-name';
             span.setAttribute('data-idx', idx);
-            span.setAttribute('data-placeholder', 'Введите ФИО...'); // Placeholder
+            span.setAttribute('data-placeholder', 'Введите ФИО...');
             span.textContent = row.name;
             
             tdName.appendChild(span);
@@ -159,7 +186,8 @@ document.addEventListener('change', (e) => {
 
 document.addEventListener('focusout', (e) => {
     if (e.target.classList.contains('edit-name')) {
-        groups[currentGroupId][currentMonthKey][e.target.dataset.idx].name = e.target.textContent;
+        const idx = e.target.getAttribute('data-idx');
+        groups[currentGroupId][currentMonthKey][idx].name = e.target.textContent;
         save();
     }
 });
@@ -172,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- ЛОГИКА ЭКСПОРТА И ИМПОРТА ---
-
 document.getElementById('btn-export').onclick = () => {
     const dataStr = JSON.stringify(groups, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
